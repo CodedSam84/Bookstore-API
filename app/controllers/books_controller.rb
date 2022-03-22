@@ -8,6 +8,13 @@ class BooksController < ApplicationController
     book_create_status(book)
   end
 
+  def destroy
+    book_to_destroy = find_book
+    book_to_destroy.destroy!
+
+    head :no_content
+  end
+
   private
 
   def book_params
@@ -20,5 +27,9 @@ class BooksController < ApplicationController
     else
       render json: book.errors, status: :unprocessable_entity
     end
+  end
+
+  def find_book
+    @book ||= Book.find(params[:id])
   end
 end
