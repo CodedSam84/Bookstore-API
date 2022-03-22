@@ -4,6 +4,6 @@ class ApplicationController < ActionController::API
   private
 
   def record_not_destroyed(exception)
-    render :json, { errors: exception.record.errors}, status: :unprocessable_entity
+    render json: { errors: exception.record.errors }, status: :unprocessable_entity
   end
 end
