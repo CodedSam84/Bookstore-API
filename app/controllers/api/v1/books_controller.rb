@@ -7,7 +7,8 @@ module Api
       end
 
       def create
-        book = Book.new(book_params)
+        author = Author.create!(author_params)
+        book = Book.new(book_params.merge(author: author))
         book_create_status(book)
       end
 
@@ -21,7 +22,11 @@ module Api
       private
 
       def book_params
-        params.require(:book).permit(:title, :author)
+        params.require(:book).permit(:title)
+      end
+
+      def author_params
+        params.require(:author).permit(:firstname, :lastname, :age)
       end
 
       def book_create_status(book)
