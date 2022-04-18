@@ -1,8 +1,10 @@
 module Api
   module V1
     class BooksController < ApplicationController
+      MAX_PAGINATION_LIMIT = 100
+
       def index
-        books = Book.all
+        books = Book.limit(params_limit)
         render json: BooksRepresenter.new(books).as_json
       end
 
@@ -39,6 +41,10 @@ module Api
 
       def find_book
         @book ||= Book.find(params[:id])
+      end
+
+      def params_limit
+        [MAX_PAGINATION_LIMIT, params.fetch(:limit, MAX_PAGINATION_LIMIT).to_i].min
       end
     end
   end

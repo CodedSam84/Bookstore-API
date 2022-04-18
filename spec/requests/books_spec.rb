@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe "Books API" do
+RSpec.describe "Books API", type: :request do
   let(:first_author) { FactoryBot.create(:author, firstname: "Uche", lastname: "Kalu", age: 33)}
   let(:second_author) { FactoryBot.create(:author, firstname: "Benjamin", lastname: "King", age: 27)}
 
@@ -13,8 +13,8 @@ RSpec.describe "Books API" do
     it "returns all books" do
       get "/api/v1/books"
       expect(response).to have_http_status(:success)
-      expect(JSON.parse(response.body).size).to eq(2)
-      expect(JSON.parse(response.body)).to eq(        
+      expect(parse_response_body.size).to eq(2)
+      expect(parse_response_body).to eq(        
        [ 
           {
             "id" => 1,
