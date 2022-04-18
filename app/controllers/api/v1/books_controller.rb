@@ -31,7 +31,7 @@ module Api
 
       def book_create_status(book)
         if book.save
-          render json: book, status: :created
+          render json: BookRepresenter.new(book).as_json, status: :created
         else
           render json: book.errors, status: :unprocessable_entity
         end
