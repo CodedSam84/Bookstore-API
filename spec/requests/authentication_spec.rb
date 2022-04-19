@@ -23,5 +23,16 @@ RSpec.describe "Authentication", type: :request do
         }
       )
     end
+
+    it "returns errors when password is missing" do
+      post "/api/v1/authenticate", params: { username: "Samuel" }
+
+      expect(response).to have_http_status(:unprocessable_entity)
+      expect(parse_response_body).to eq(
+        {
+          "error"=>"param is missing or the value is empty: password"
+        }
+      )
+    end
   end
 end
