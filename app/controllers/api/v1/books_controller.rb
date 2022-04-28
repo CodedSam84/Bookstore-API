@@ -1,6 +1,10 @@
 module Api
   module V1
     class BooksController < ApplicationController
+      include ActionController::HttpAuthentication::Token
+
+      before_action :authenticate_user, only: [:create, :destroy]
+
       MAX_PAGINATION_LIMIT = 100
 
       def index
@@ -45,6 +49,14 @@ module Api
 
       def params_limit
         [MAX_PAGINATION_LIMIT, params.fetch(:limit, MAX_PAGINATION_LIMIT).to_i].min
+      end
+
+      def authenticate_user
+        token, _options = token_and_options(request)
+        user_id = AuthenticationTokenService.decode(token)
+        User.find(user_id)
+      rescue ActiveRecord::RecordNotFound
+        render status: :unauthorized
       end
     end
   end

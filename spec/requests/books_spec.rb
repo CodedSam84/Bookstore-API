@@ -36,12 +36,14 @@ RSpec.describe "Books API", type: :request do
   end
 
   describe "POST /books" do
+    let!(:user) { FactoryBot.create(:user, password: "1234") }
+
     it "creates a new book" do
       expect {
         post "/api/v1/books", params: { 
-          book: { title: "Last Days", author: "JWT" },
+          book: { title: "Last Days" },
           author: { firstname: "Sandy", lastname: "Brown", age: 44 }
-        }
+        }, headers: { "Authorization" => "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMSJ9.M1vu6qDej7HzuSxcfbE6KAMekNUXB3EWtxwS0pg4UGg" }
       }.to change { Book.count }.from(0).to(1)
 
       expect(response).to have_http_status(:created)
@@ -53,17 +55,17 @@ RSpec.describe "Books API", type: :request do
           "author_name" => "Sandy Brown",
           "author_age" => 44
         }
-      )
-      
+      ) 
     end
   end
 
   describe "DELETE /books/:id" do
     let!(:book) { FactoryBot.create(:book, title: "Metaverse", author: first_author) }
-
+    let!(:user) { FactoryBot.create(:user, password: "1234") }
+    
     it "deletes a book" do
       expect {
-        delete "/api/v1/books/#{book.id}"
+        delete "/api/v1/books/#{book.id}", headers: { "Authorization" => "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyX2lkIjoiMiJ9.kV_3DO7seCnEccsZ8kCmfMiQSLIxzfuegJi6vMI3Tvc"}
       }.to change { Book.count }.from(1).to(0)
 
       expect(response).to have_http_status(:no_content)
